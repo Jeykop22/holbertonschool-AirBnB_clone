@@ -7,6 +7,8 @@ for other classes"""
 
 
 class BaseModel:
+    """Write a class BaseModel that defines all common attributes/methods
+    for other classes"""
     def __init__(self):
         self.id = str(uuid.uuid4())
         self.created_at = datetime.now()
@@ -14,9 +16,9 @@ class BaseModel:
         models.storage.new(self)
 
     def __str__(self):
-        """str a function to print the class"""
-        txt = "[{}] ({}) {}"
-        return txt.format(self.__class__.__name__, self.id, self.__dict__)
+        """ Returns a readable string representation
+        of an instance"""
+        return (f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}")
 
     def save(self):
         """saves a new version of class and updates the time of update"""
