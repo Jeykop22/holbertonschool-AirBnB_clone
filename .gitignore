@@ -2,3 +2,4 @@
 __pycache__
 *.json
 w3c_validator.py
+test*.py
