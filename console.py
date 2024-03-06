@@ -6,12 +6,14 @@ This module represents the console
 import cmd
 from models.base_model import BaseModel
 import json
+import shlex
+
 
 class HBNBCommand(cmd.Cmd):
     """
     This class defines console functions
     """
-    
+
     prompt = "(hbnb) "
     classes = ["BaseModel"]
 
@@ -21,22 +23,26 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
 
-        if arg not in self.classes:
+        args = shlex.split(arg)
+        class_name = args[0]
+
+        if class_name not in self.classes:
             print("** class doesn't exist **")
             return
 
-        new_instance = eval(arg)()
+        new_instance = eval(class_name)()
         new_instance.save()
         print(new_instance.id)
 
     def do_show(self, arg):
         """Prints the string representation of an instance"""
-        args = arg.split()
+        args = shlex.split(arg)
         if not args:
             print("** class name missing **")
             return
 
         class_name = args[0]
+
         if class_name not in self.classes:
             print("** class doesn't exist **")
             return
@@ -54,12 +60,13 @@ class HBNBCommand(cmd.Cmd):
 
     def do_destroy(self, arg):
         """Destroy command to delete an instance"""
-        args = arg.split()
+        args = shlex.split(arg)
         if not args:
             print("** class name missing **")
             return
 
         class_name = args[0]
+
         if class_name not in self.classes:
             print("** class doesn't exist **")
             return
@@ -78,7 +85,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, arg):
         """Prints all instances"""
-        args = arg.split()
+        args = shlex.split(arg)
         if args and args[0] not in self.classes:
             print("** class doesn't exist **")
             return
@@ -89,12 +96,13 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, arg):
         """Updates an instance"""
-        args = arg.split()
+        args = shlex.split(arg)
         if not args:
             print("** class name missing **")
             return
 
         class_name = args[0]
+
         if class_name not in self.classes:
             print("** class doesn't exist **")
             return
@@ -114,11 +122,24 @@ class HBNBCommand(cmd.Cmd):
             return
 
         attribute_name = args[2]
+
         if len(args) < 4:
             print("** value missing **")
             return
 
-        attribute_value = args[3]
+        attribute_value_str = args[3]
+
+        if attribute_value_str[0] == '"' and attribute_value_str[-1] == '"':
+            attribute_value = attribute_value_str[1:-1]
+        else:
+            try:
+                attribute_value = int(attribute_value_str)
+            except ValueError:
+                try:
+                    attribute_value = float(attribute_value_str)
+                except ValueError:
+                    attribute_value = attribute_value_str
+
         setattr(found_instance, attribute_name, attribute_value)
         found_instance.save()
 
