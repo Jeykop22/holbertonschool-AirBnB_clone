@@ -9,7 +9,8 @@ class BaseModel():
     """This class represent a model for the futures instances of this one"""
 
     def __init__(self, *args, **kwargs):
-        """Constructor of the class, used to create or recreate an instance"""
+        """Constructor of the class, used to create or recreate an instance
+"""
         time_format = "%Y-%m-%dT%H:%M:%S.%f"
         if kwargs:
             for (key, value) in kwargs.items():
