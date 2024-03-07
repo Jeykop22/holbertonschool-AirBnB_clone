@@ -7,14 +7,13 @@ import cmd
 from models.base_model import BaseModel
 import json
 
-classes = {"BaseModel": BaseModel}
-
 
 class HBNBCommand(cmd.Cmd):
     """
     This class defines console functions
     """
 
+    classes = ["BaseModel"]
     prompt = "(hbnb) "
 
     def do_create(self, arg):
