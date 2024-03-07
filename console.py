@@ -5,8 +5,16 @@ This module represents the console
 
 import cmd
 from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 import json
-import shlex
+
+classes = {"BaseModel": BaseModel, "User": User, "State": State, "City": City,
+           "Amenity": Amenity, "Place": Place, "Review": Review}
 
 
 class HBNBCommand(cmd.Cmd):
@@ -15,20 +23,22 @@ class HBNBCommand(cmd.Cmd):
     """
 
     prompt = "(hbnb) "
-    classes = ["BaseModel"]
 
     def do_create(self, arg):
         """Create command to create an instance of a class"""
-        if not arg:
+        args = arg.split()
+        if len(arg) == 0:
             print("** class name missing **")
-            return
+            return False
 
-        args = shlex.split(arg)
         class_name = args[0]
-
         if class_name not in self.classes:
             print("** class doesn't exist **")
-            return
+            return False
+
+        if len(args) > 1:
+            print("Incorrect number of arguments")
+            return False
 
         new_instance = eval(class_name)()
         new_instance.save()
@@ -36,44 +46,52 @@ class HBNBCommand(cmd.Cmd):
 
     def do_show(self, arg):
         """Prints the string representation of an instance"""
-        args = shlex.split(arg)
-        if not args:
+        args = arg.split()
+        if len(arg) == 0:
             print("** class name missing **")
-            return
+            return False
 
         class_name = args[0]
 
         if class_name not in self.classes:
             print("** class doesn't exist **")
-            return
+            return False
 
-        if len(args) < 2:
+        if len(args) == 1:
             print("** instance id missing **")
-            return
+            return False
+
+        if len(args) > 2:
+            print("Incorrect number of arguments")
+            return False
 
         instance_id = args[1]
         found_instance = BaseModel().get(class_name, instance_id)
-        if not found_instance:
-            print("** no instance found **")
-        else:
+        if found_instance:
             print(found_instance)
+        else:
+            print("** no instance found **")
 
     def do_destroy(self, arg):
         """Destroy command to delete an instance"""
-        args = shlex.split(arg)
-        if not args:
+        args = arg.split()
+        if len(arg) == 0:
             print("** class name missing **")
-            return
+            return False
 
         class_name = args[0]
 
         if class_name not in self.classes:
             print("** class doesn't exist **")
-            return
+            return False
 
-        if len(args) < 2:
+        if len(args) == 1:
             print("** instance id missing **")
-            return
+            return False
+        
+        if len(args) > 2:
+            print("Incorrect numer of arguments")
+            return False
 
         instance_id = args[1]
         found_instance = BaseModel().get(class_name, instance_id)
@@ -85,7 +103,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, arg):
         """Prints all instances"""
-        args = shlex.split(arg)
+        args = arg.split()
         if args and args[0] not in self.classes:
             print("** class doesn't exist **")
             return
@@ -96,36 +114,36 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, arg):
         """Updates an instance"""
-        args = shlex.split(arg)
-        if not args:
+        args = arg.split()
+        if len(arg) == 0:
             print("** class name missing **")
-            return
+            return False
 
         class_name = args[0]
 
         if class_name not in self.classes:
             print("** class doesn't exist **")
-            return
+            return False
 
         if len(args) < 2:
             print("** instance id missing **")
-            return
+            return False
 
         instance_id = args[1]
         found_instance = BaseModel().get(class_name, instance_id)
         if not found_instance:
             print("** no instance found **")
-            return
+            return False
 
-        if len(args) < 3:
+        if len(args) == 2:
             print("** attribute name missing **")
-            return
+            return False
 
         attribute_name = args[2]
 
-        if len(args) < 4:
+        if len(args) == 3:
             print("** value missing **")
-            return
+            return False
 
         attribute_value_str = args[3]
 
