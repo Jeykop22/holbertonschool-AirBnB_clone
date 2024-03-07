@@ -4,6 +4,7 @@ This module represents the console
 """
 
 import cmd
+from models import storage
 from models.base_model import BaseModel
 import json
 
@@ -57,12 +58,13 @@ class HBNBCommand(cmd.Cmd):
             print("Incorrect number of arguments")
             return False
 
-        instance_id = args[1]
-        found_instance = BaseModel().get(class_name, instance_id)
-        if found_instance:
-            print(found_instance)
-        else:
+        instance_id = f"{arg[0]}.{arg[1]}"
+        all_objs = storage.all()
+        obj = all_objs.get(instance_id, None)
+        if obj is None:
             print("** no instance found **")
+        else:
+            print(obj)
 
     def do_destroy(self, arg):
         """Destroy command to delete an instance"""
