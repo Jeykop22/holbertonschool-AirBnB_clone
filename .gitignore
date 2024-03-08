@@ -3,3 +3,5 @@ __pycache__
 *.json
 w3c_validator.py
 test*.py
+models/__pycache__/base_model.cpython-310.pyc
+models/__pycache__/__init__.cpython-310.pyc
